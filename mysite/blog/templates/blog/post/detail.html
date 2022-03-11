@@ -24,7 +24,7 @@
       Comment {{ forloop.counter }} by {{ comment.name }}
       {{ comment.created }}
     </p>
-{#    {{ comment.body|markdown }}#}
+    {{ comment.body|markdown }}
   </div>
 {% empty %}
   <p>There are no comments yet.</p>
