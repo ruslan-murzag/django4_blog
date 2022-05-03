@@ -27,12 +27,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-SITE_ID = 1
+SITE_ID = 2
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.sitemaps',
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -41,6 +40,8 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'taggit',
     'django.contrib.postgres',
+    'account.apps.AccountConfig',
+    'django.contrib.admin',
 
 ]
 
@@ -133,7 +134,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'rus.mur2001@gmail.com'
+EMAIL_HOST_PASSWORD = '22121974Aa'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+
+
+
