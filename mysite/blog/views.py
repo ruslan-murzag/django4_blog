@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Post, Comment
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views.generic import ListView
-from .forms import EmailPostForm, CommentForm, SearchForm
+from django.views.generic import ListView, CreateView
+from .forms import EmailPostForm, CommentForm, SearchForm, PostCreateForm
 from django.core.mail import send_mail
 from taggit.models import Tag
 from django.contrib.postgres.search import TrigramSimilarity
+from django.contrib.auth.decorators import login_required
+
 
 
 class PostListView(ListView):
@@ -110,3 +112,29 @@ def post_search(request):
     return render(request, 'blog/post/search.html', {'form': form,
                                                      'query': query,
                                                      'results': results})
+
+
+# class AddPostView(CreateView):
+#     model = Post
+#     template_name = 'blog/post/add_post.html'
+#     fields = ['title', 'slug', 'author', 'body', 'status', 'tags']
+
+
+@login_required
+def add_post(request):
+    new_post_form = False
+    if request.method == 'POST':
+        create_post_form = PostCreateForm(data=request.POST)
+        # print(create_post_form)
+        if create_post_form.is_valid():
+            create_post_form = create_post_form.save(commit=False)
+            create_post_form.author = request.user
+            create_post_form.save()
+            new_post_form = True
+    else:
+        create_post_form = PostCreateForm()
+
+    return render(request, 'blog/post/add_post.html', {
+        'post_form': create_post_form,
+        'new':new_post_form
+    })

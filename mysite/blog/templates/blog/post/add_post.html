@@ -1,0 +1,16 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Add post{% endblock %}
+{% block content %}
+    {% if new %}
+        <p>Yor create a post. You can see it by this <a href="{% url 'blog:post_list' %}">link</a></p>
+    {% else %}
+        <form method="POST">
+        {% csrf_token %}
+        {{ post_form.as_p }}
+        <p>
+            <input type="submit" value="Create">
+        </p>
+        </form>
+    {% endif %}
+{% endblock %}
