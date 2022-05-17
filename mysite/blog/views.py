@@ -2,12 +2,11 @@ from django.shortcuts import render, get_object_or_404
 from .models import Post, Comment
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView, CreateView
-from .forms import EmailPostForm, CommentForm, SearchForm, PostCreateForm
+from .forms import *
 from django.core.mail import send_mail
 from taggit.models import Tag
 from django.contrib.postgres.search import TrigramSimilarity
 from django.contrib.auth.decorators import login_required
-
 
 
 class PostListView(ListView):
@@ -136,5 +135,32 @@ def add_post(request):
 
     return render(request, 'blog/post/add_post.html', {
         'post_form': create_post_form,
-        'new':new_post_form
+        'new': new_post_form
     })
+
+
+@login_required
+def post_edit(request, year, month, day, post):
+    post = get_object_or_404(Post,
+                             slug=post,
+                             status='published',
+                             publish__year=year,
+                             publish__month=month,
+                             publish__day=day)
+    permission = (request.user == post.author)
+    new_post = False
+    if request.method == 'POST':
+        post_form = PostEditForm(data=request.POST, instance=post)
+
+        if post_form.is_valid():
+            post_form = post_form.save(commit=False)
+            post_form.author = request.user
+            post_form.save()
+            new_post = True
+    else:
+        post_form = PostEditForm(instance=post)
+    return render(request,
+                  'blog/post/post_edit.html',
+                  {'post_form': post_form,
+                   'permission': permission,
+                   'new_post': new_post})

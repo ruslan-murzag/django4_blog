@@ -3,6 +3,7 @@
 {% block title %}{{ post.title }}{% endblock %}
 {% block content %}
 <h1>{{ post.title }}</h1>
+    <a href="{% url 'blog:post_edit' year=post.publish.year month=post.publish.month day=post.publish.day post=post.slug  %}">Edit post</a>
 <p class="date">
     Published {{ post.publish }} by {{ post.author }}
 </p>
@@ -43,5 +44,6 @@
             <input type="submit" value="Add comment">
         </p>
     </form>
+    
 {% endif %}
 {% endblock%}

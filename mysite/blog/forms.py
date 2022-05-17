@@ -24,3 +24,8 @@ class PostCreateForm(forms.ModelForm):
         model = Post
         fields = ('title', 'slug', 'body', 'status', 'tags')
 
+
+class PostEditForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('title', 'slug', 'body', 'status', 'tags', )

@@ -1,0 +1,21 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Edit post{% endblock %}
+{% block content %}
+    {% if permission %}
+    {% if new_post %}
+        <p>You changed successfully <a href="{% url 'blog:post_list' %}">posts</a></p>
+    {% else %}
+        <form method="POST">
+        {% csrf_token %}
+        {{ post_form.as_p }}
+        <p>
+            <input type="submit" value="Edit">
+        </p>
+        </form>
+    {% endif %}
+    {% else %}
+        <p>You are not allowed to change the post. Go to  <a href="{% url 'blog:post_list' %}">blog</a></p>
+    {% endif %}
+
+{% endblock %}

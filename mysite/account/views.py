@@ -1,7 +1,11 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Profile
+from django.urls import reverse
+from django.shortcuts import redirect
+
 
 
 @login_required
@@ -45,6 +49,7 @@ def edit(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+        return redirect('blog:post_list')
     else:
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(
