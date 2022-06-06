@@ -1,6 +1,12 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from .feeds import LatestPostFeed
+from rest_framework import routers
+
+
+router = routers.DefaultRouter()
+
+router.register(r'posts', views.PostViewSet)
 app_name = 'blog'
 
 urlpatterns = [
@@ -14,5 +20,5 @@ urlpatterns = [
     path('search/', views.post_search, name='post_search'),
     path('add_post/', views.add_post, name='add_post'),
     path('edit/<int:year>/<int:month>/<int:day>/<slug:post>/', views.post_edit, name='post_edit'),
-
+    path('api/', include(router.urls))
 ]

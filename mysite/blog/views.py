@@ -7,13 +7,15 @@ from django.core.mail import send_mail
 from taggit.models import Tag
 from django.contrib.postgres.search import TrigramSimilarity
 from django.contrib.auth.decorators import login_required
+from rest_framework import viewsets
+from .serializers import *
 
 
-class PostListView(ListView):
-    queryset = Post.published.all()
-    context_object_name = 'posts'
-    paginate_by = 3
-    template_name = 'blog/post/list.html'
+# class PostListView(ListView):
+#     queryset = Post.published.all()
+#     context_object_name = 'posts'
+#     paginate_by = 3
+#     template_name = 'blog/post/list.html'
 
 
 def post_list(request, tag_slug=None):
@@ -25,6 +27,7 @@ def post_list(request, tag_slug=None):
 
     paginator = Paginator(object_list, 3)  # 3 posts in each page
     page = request.GET.get('page')
+
 
     try:
         posts = paginator.page(page)
@@ -164,3 +167,8 @@ def post_edit(request, year, month, day, post):
                   {'post_form': post_form,
                    'permission': permission,
                    'new_post': new_post})
+
+
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer

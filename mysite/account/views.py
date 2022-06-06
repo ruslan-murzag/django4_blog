@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -5,14 +6,31 @@ from .forms import UserRegistrationForm, UserEditForm, ProfileEditForm
 from .models import Profile
 from django.urls import reverse
 from django.shortcuts import redirect
-
+from django.shortcuts import render, get_object_or_404
+from blog.models import *
 
 
 @login_required
 def dashboard(request):
+    posts = Post.objects.filter(author=request.user)
+    paginator = Paginator(posts, 3)  # 3 posts in each page
+    page = request.GET.get('page')
+    total = posts.count()
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer deliver the first page
+        posts = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range deliver last page of results
+        posts = paginator.page(paginator.num_pages)
     return render(request,
                   'account/dashboard.html',
-                  {'section': 'dashboard'})
+                  {'section': 'dashboard',
+                   'posts': posts,
+                   'page': page,
+                   'total': total},
+                  )
 
 
 def register(request):
